@@ -30,10 +30,10 @@ export const WinnerModal: React.FC<WinnerModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-lg bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl border-2 border-amber-500/50 p-6 sm:p-8 shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-lg bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl border-2 border-emerald-500/50 p-6 sm:p-8 shadow-2xl overflow-hidden">
         
-        {/* Top Gold Glow */}
-        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
+        {/* Top Glow en Verde UTH */}
+        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 bg-[#006837]/30 rounded-full blur-3xl pointer-events-none" />
 
         {/* Close Button */}
         <button
@@ -46,18 +46,18 @@ export const WinnerModal: React.FC<WinnerModalProps> = ({
         {/* Header Icon */}
         <div className="flex flex-col items-center text-center">
           <div className="relative mb-4">
-            <div className="absolute inset-0 bg-amber-500 rounded-full blur-lg opacity-60 animate-pulse" />
-            <div className="relative w-20 h-20 bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-300 rounded-full flex items-center justify-center shadow-lg border-2 border-amber-200">
-              <Trophy className="w-10 h-10 text-slate-950" />
+            <div className="absolute inset-0 bg-emerald-500 rounded-full blur-lg opacity-60 animate-pulse" />
+            <div className="relative w-20 h-20 bg-gradient-to-tr from-[#006837] via-emerald-500 to-[#FFC60B] rounded-full flex items-center justify-center shadow-lg border-2 border-emerald-200">
+              <Trophy className="w-10 h-10 text-white" />
             </div>
           </div>
 
-          <span className="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-950/60 border border-amber-800/80 px-3 py-1 rounded-full mb-2">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#FFC60B] bg-emerald-950/80 border border-emerald-800 px-3 py-1 rounded-full mb-2">
             ¡TENEMOS UN GANADOR!
           </span>
 
           {/* Winner Name */}
-          <h2 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-100 to-amber-400 my-2 tracking-tight drop-shadow">
+          <h2 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-white to-[#FFC60B] my-2 tracking-tight drop-shadow">
             {winner.name}
           </h2>
 
@@ -65,13 +65,13 @@ export const WinnerModal: React.FC<WinnerModalProps> = ({
           <div className="flex flex-wrap justify-center gap-2 my-4 w-full text-xs">
             {winner.email && (
               <div className="flex items-center gap-1.5 bg-slate-800/80 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700">
-                <Mail className="w-3.5 h-3.5 text-amber-400" />
+                <Mail className="w-3.5 h-3.5 text-emerald-400" />
                 <span>{winner.email}</span>
               </div>
             )}
             {winner.phone && (
               <div className="flex items-center gap-1.5 bg-slate-800/80 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700">
-                <Phone className="w-3.5 h-3.5 text-amber-400" />
+                <Phone className="w-3.5 h-3.5 text-emerald-400" />
                 <span>{winner.phone}</span>
               </div>
             )}
@@ -81,7 +81,7 @@ export const WinnerModal: React.FC<WinnerModalProps> = ({
           {winner.extraInfo && Object.keys(winner.extraInfo).length > 0 && (
             <div className="w-full bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-left my-2 text-xs text-slate-300 space-y-1 max-h-36 overflow-y-auto">
               <div className="flex items-center gap-1 text-slate-400 font-semibold mb-1">
-                <Info className="w-3.5 h-3.5 text-amber-400" />
+                <Info className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Detalles de la hoja:</span>
               </div>
               {Object.entries(winner.extraInfo).map(([key, val]) => (
@@ -108,7 +108,6 @@ export const WinnerModal: React.FC<WinnerModalProps> = ({
             <Trash2 className="w-4 h-4" />
             <span>Eliminar de la ruleta</span>
           </button>
-
           <button
             onClick={() => {
               onKeepWinner();
@@ -127,9 +126,9 @@ export const WinnerModal: React.FC<WinnerModalProps> = ({
             onClose();
             setTimeout(onSpinAgain, 300);
           }}
-          className="w-full mt-3 flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold py-3 px-4 rounded-xl shadow-lg transition-all cursor-pointer text-sm"
+          className="w-full mt-3 flex items-center justify-center gap-2 bg-gradient-to-r from-[#006837] to-[#005028] hover:from-emerald-600 hover:to-[#006837] text-white font-extrabold py-3 px-4 rounded-xl shadow-lg transition-all cursor-pointer text-sm border border-emerald-500/40"
         >
-          <RotateCcw className="w-4 h-4" />
+          <RotateCcw className="w-4 h-4 text-[#FFC60B]" />
           <span>¡Girar de nuevo!</span>
         </button>
 

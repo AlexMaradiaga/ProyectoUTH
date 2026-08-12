@@ -283,7 +283,7 @@ export default function App() {
   return (
     <div className="flex flex-col h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans select-none">
       
-      {/* Top Navbar Header */}
+      {/* Top Navbar Header con Logo UTH */}
       <header className="h-16 bg-slate-900/90 border-b border-slate-800/80 px-4 flex items-center justify-between shrink-0 z-20 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <button
@@ -294,19 +294,23 @@ export default function App() {
             {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
 
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 via-yellow-400 to-amber-300 flex items-center justify-center shadow-lg border border-amber-300/40">
-              <Trophy className="w-5 h-5 text-slate-950 font-bold" />
-            </div>
+          <div className="flex items-center gap-3">
+            {/* Logo Oficial UTH */}
+            <img 
+              src="/ImagenUTH.png" 
+              alt="UTH Logo" 
+              className="h-10 w-auto object-contain bg-white/10 p-1 rounded-lg border border-emerald-500/30"
+            />
+            <div className="hidden sm:block h-7 w-[1px] bg-slate-800" />
             <div>
               <h1 className="font-extrabold text-lg text-white tracking-tight leading-tight flex items-center gap-2">
-                <span>Ruleta de Ganadores</span>
-                <span className="hidden sm:inline-block text-[10px] uppercase font-bold bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30">
+                <span>Ruleta UTH</span>
+                <span className="hidden sm:inline-block text-[10px] uppercase font-bold bg-[#006837]/30 text-emerald-400 px-2 py-0.5 rounded-full border border-[#006837]">
                   TIEMPO REAL
                 </span>
               </h1>
               <p className="text-[11px] text-slate-400 hidden sm:block">
-                Conectado con Google Sheets
+                Universidad Tecnológica de Honduras
               </p>
             </div>
           </div>
@@ -347,7 +351,7 @@ export default function App() {
           >
             <RefreshCw
               className={`w-3.5 h-3.5 ${
-                sheetConfig.status === 'loading' ? 'animate-spin text-amber-400' : ''
+                sheetConfig.status === 'loading' ? 'animate-spin text-emerald-400' : ''
               }`}
             />
             <span className="hidden md:inline">Sincronizar</span>
@@ -355,9 +359,9 @@ export default function App() {
 
           <button
             onClick={() => setIsSettingsModalOpen(true)}
-            className="flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold py-2 px-3 rounded-xl shadow-lg transition-all cursor-pointer"
+            className="flex items-center gap-1.5 bg-[#006837] hover:bg-[#005028] text-white text-xs font-bold py-2 px-3 rounded-xl shadow-lg transition-all cursor-pointer border border-emerald-500/30"
           >
-            <FileSpreadsheet className="w-4 h-4" />
+            <FileSpreadsheet className="w-4 h-4 text-[#FFC60B]" />
             <span className="hidden sm:inline">Google Sheets</span>
           </button>
         </div>
