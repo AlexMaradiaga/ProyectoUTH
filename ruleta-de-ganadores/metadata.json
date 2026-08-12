@@ -1,0 +1,6 @@
+{
+  "name": "Ruleta de Ganadores",
+  "description": "Ruleta interactiva en tiempo real para seleccionar ganadores conectada a Google Sheets.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
