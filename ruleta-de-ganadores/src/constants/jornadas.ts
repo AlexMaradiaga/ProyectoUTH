@@ -19,20 +19,20 @@ export const JORNADAS: Jornada[] = [
     name: 'Jueves Tarde',
     day: 'Jueves',
     session: 'Tarde',
-    url: 'https://docs.google.com/spreadsheets/d/1RFexMwM6S2iffc5pX3rp5C9q28foFWSbqfZ6AwHZCA/edit?usp=sharing',
+    url: 'https://docs.google.com/spreadsheets/d/1RFexMwM6S2iff-c5pX3rp5C9q28foFWSbqfZ6AwHZCA/edit?gid=1376844313#gid=1376844313',
   },
   {
     id: 'viernes-manana',
     name: 'Viernes Mañana',
     day: 'Viernes',
     session: 'Mañana',
-    url: 'https://docs.google.com/spreadsheets/d/1cQ63tsF58Dn76dS9_NSsmuUBqekCScWEATG3WDvS0qw/edit?usp=sharing',
+    url: 'https://docs.google.com/spreadsheets/d/1cQ63tsF58Dn76dS9_NSsmuUBqekCScWEATG3WDvS0qw/edit?gid=705517632#gid=705517632',
   },
   {
     id: 'viernes-tarde',
     name: 'Viernes Tarde',
     day: 'Viernes',
     session: 'Tarde',
-    url: 'https://docs.google.com/spreadsheets/d/14Pt7QLp76wJIRz4GvHffqNOiN2NrwklWh8vT0GlxlRw/edit?usp=sharing',
+    url: 'https://docs.google.com/spreadsheets/d/14Pt7QLp76wJIRz4GvHffqNOiN2NrwklWh8vT0GlxlRw/edit?gid=1946237727#gid=1946237727',
   },
 ];
