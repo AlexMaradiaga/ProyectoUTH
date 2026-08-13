@@ -20,10 +20,10 @@ import {
   FileSpreadsheet
 } from 'lucide-react';
 
+// URL por defecto configurada para JUEVES TARDE
 const DEFAULT_SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1WSXedfn2b_72gbW5jpkq4gnf3neIqVnvL1GXBB_2Ops/edit?gid=1649911515#gid=1649911515';
+  'https://docs.google.com/spreadsheets/d/1RFexMwM6S2iff-c5pX3rp5C9q28foFWSbqfZ6AwHZCA/edit?gid=1376844313#gid=1376844313';
 
-// Sample fallback participants if Google Sheet is completely empty or during offline testing
 const FALLBACK_SAMPLE_NAMES = [
   'Carlos Mendoza',
   'Ana Sofía Reyes',
@@ -43,13 +43,13 @@ export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
 
-  // Excluded IDs (e.g. winners who were removed from the wheel)
   const [removedParticipantIds, setRemovedParticipantIds] = useState<Set<string>>(new Set());
 
+  // Estado inicial sincronizado exactamente con la hoja de JUEVES TARDE
   const [sheetConfig, setSheetConfig] = useState<SheetConfig>({
     url: DEFAULT_SHEET_URL,
-    spreadsheetId: '1WSXedfn2b_72gbW5jpkq4gnf3neIqVnvL1GXBB_2Ops',
-    gid: '1649911515',
+    spreadsheetId: '1RFexMwM6S2iff-c5pX3rp5C9q28foFWSbqfZ6AwHZCA',
+    gid: '1376844313',
     selectedColumn: '',
     availableColumns: [],
     autoSync: true,
@@ -70,7 +70,6 @@ export default function App() {
   const isSpinningRef = useRef(isSpinning);
   isSpinningRef.current = isSpinning;
 
-  // Fetch sheet data from API
   const fetchSheetData = useCallback(
     async (overrideUrl?: string, overrideColumn?: string, overrideJornadaId?: string) => {
       const targetUrl = overrideUrl || sheetConfig.url;
@@ -96,7 +95,6 @@ export default function App() {
         const rawParticipants: string[] = data.participants || [];
         const rows: Record<string, string>[] = data.rows || [];
 
-        // Map parsed strings to Participant objects
         const newParticipants: Participant[] = rawParticipants.map((nameStr, idx) => {
           const rowObj = rows[idx] || {};
           const email =
@@ -118,11 +116,10 @@ export default function App() {
             email,
             phone,
             extraInfo: rowObj,
-            sourceRow: idx + 2, // 1-indexed row with header
+            sourceRow: idx + 2,
           };
         });
 
-        // Filter out explicitly removed IDs
         setParticipants(newParticipants.filter((p) => !removedParticipantIds.has(p.id)));
 
         const matchedJornada = JORNADAS.find((j) => j.url === targetUrl);
@@ -147,7 +144,6 @@ export default function App() {
           error: err.message,
         }));
 
-        // If sheet is empty or fetch fails, and participants is empty, load sample fallback
         setParticipants((current) => {
           if (current.length === 0) {
             return FALLBACK_SAMPLE_NAMES.map((name, idx) => ({
@@ -162,17 +158,14 @@ export default function App() {
     [sheetConfig.url, sheetConfig.selectedColumn, removedParticipantIds]
   );
 
-  // Initial load
   useEffect(() => {
     fetchSheetData();
   }, [fetchSheetData]);
 
-  // Real-time polling timer
   useEffect(() => {
     if (!sheetConfig.autoSync || sheetConfig.syncIntervalSeconds <= 0) return;
 
     const timer = setInterval(() => {
-      // Don't refresh in the middle of spinning to prevent layout shifts
       if (!isSpinningRef.current) {
         fetchSheetData();
       }
@@ -181,14 +174,12 @@ export default function App() {
     return () => clearInterval(timer);
   }, [sheetConfig.autoSync, sheetConfig.syncIntervalSeconds, fetchSheetData]);
 
-  // Sound toggle
   const handleToggleSound = () => {
     const nextState = !wheelSettings.soundEnabled;
     setWheelSettings((prev) => ({ ...prev, soundEnabled: nextState }));
     soundEffects.setMuted(!nextState);
   };
 
-  // Spin lifecycle
   const handleSpinStart = () => {
     setIsSpinning(true);
     setCurrentWinner(null);
@@ -198,7 +189,6 @@ export default function App() {
     setIsSpinning(false);
     setCurrentWinner(winner);
 
-    // Record winner in history
     const newWinnerEntry: Winner = {
       id: `win-${Date.now()}`,
       participant: winner,
@@ -209,7 +199,6 @@ export default function App() {
     setWinners((prev) => [newWinnerEntry, ...prev]);
   };
 
-  // Remove winner from wheel
   const handleRemoveWinner = (winner: Participant) => {
     setRemovedParticipantIds((prev) => {
       const next = new Set(prev);
@@ -219,13 +208,11 @@ export default function App() {
 
     setParticipants((prev) => prev.filter((p) => p.id !== winner.id));
 
-    // Mark in winners history as removed
     setWinners((prev) =>
       prev.map((w) => (w.participant.id === winner.id ? { ...w, removedFromWheel: true } : w))
     );
   };
 
-  // Restore winner back to active wheel
   const handleRestoreWinnerToWheel = (winnerEntry: Winner) => {
     const winnerId = winnerEntry.participant.id;
 
@@ -235,7 +222,6 @@ export default function App() {
       return next;
     });
 
-    // Add back if not already in list
     setParticipants((prev) => {
       if (!prev.some((p) => p.id === winnerId)) {
         return [winnerEntry.participant, ...prev];
@@ -248,7 +234,6 @@ export default function App() {
     );
   };
 
-  // Manual participant handlers
   const handleAddParticipant = (name: string) => {
     const newP: Participant = {
       id: `manual-${Date.now()}`,
@@ -283,8 +268,6 @@ export default function App() {
 
   return (
     <div className="flex flex-col h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans select-none">
-      
-      {/* Top Navbar Header con Logo UTH */}
       <header className="h-16 bg-slate-900/90 border-b border-slate-800/80 px-4 flex items-center justify-between shrink-0 z-20 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <button
@@ -296,7 +279,6 @@ export default function App() {
           </button>
 
           <div className="flex items-center gap-3">
-            {/* Logo Oficial UTH */}
             <img 
               src="/ImagenUTH.png" 
               alt="UTH Logo" 
@@ -317,9 +299,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Header Right Status & Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Live Sync Status Pulse */}
           <div className="hidden sm:flex items-center gap-2 bg-slate-800/60 border border-slate-700/60 px-3 py-1.5 rounded-xl text-xs">
             <div className="relative flex h-2.5 w-2.5">
               {sheetConfig.autoSync && (
@@ -368,10 +348,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main Body Grid */}
       <div className="flex-1 flex overflow-hidden relative">
-        
-        {/* Left Sidebar - Participants Management */}
         <div
           className={`fixed lg:relative z-30 inset-y-0 left-0 w-80 max-w-[85vw] transform transition-transform duration-300 ease-in-out ${
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
@@ -391,7 +368,6 @@ export default function App() {
           />
         </div>
 
-        {/* Mobile backdrop for sidebar */}
         {isSidebarOpen && (
           <div
             onClick={() => setIsSidebarOpen(false)}
@@ -399,10 +375,7 @@ export default function App() {
           />
         )}
 
-        {/* Central Wheel Stage & Right Winner History */}
         <main className="flex-1 flex flex-col lg:flex-row items-center justify-between p-4 sm:p-6 overflow-y-auto gap-6 custom-scrollbar bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-slate-950">
-          
-          {/* Interactive Wheel Stage */}
           <div className="flex-1 w-full flex flex-col items-center justify-center my-auto">
             <RouletteWheel
               participants={participants}
@@ -414,7 +387,6 @@ export default function App() {
             />
           </div>
 
-          {/* Right Column: Winners History Panel */}
           <div className="w-full lg:w-96 shrink-0 space-y-4">
             <WinnersHistory
               winners={winners}
@@ -422,11 +394,9 @@ export default function App() {
               onRestoreWinnerToWheel={handleRestoreWinnerToWheel}
             />
           </div>
-
         </main>
       </div>
 
-      {/* Winner Celebration Modal */}
       <WinnerModal
         winner={currentWinner}
         onClose={() => setCurrentWinner(null)}
@@ -434,13 +404,11 @@ export default function App() {
         onKeepWinner={() => setCurrentWinner(null)}
         onSpinAgain={() => {
           setCurrentWinner(null);
-          // spin wheel again
           const spinBtn = document.querySelector('button:has(svg.lucide-play)') as HTMLButtonElement;
           if (spinBtn) spinBtn.click();
         }}
       />
 
-      {/* Google Sheets Settings & Custom URL Modal */}
       <SheetSettingsModal
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
@@ -458,7 +426,6 @@ export default function App() {
           }))
         }
       />
-
     </div>
   );
 }
