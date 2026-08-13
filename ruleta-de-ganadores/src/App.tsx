@@ -45,7 +45,7 @@ export default function App() {
 
   const [removedParticipantIds, setRemovedParticipantIds] = useState<Set<string>>(new Set());
 
-  // Estado inicial sincronizado exactamente con la hoja de JUEVES TARDE
+  // Estado inicial sincronizado exactamente con JUEVES TARDE
   const [sheetConfig, setSheetConfig] = useState<SheetConfig>({
     url: DEFAULT_SHEET_URL,
     spreadsheetId: '1RFexMwM6S2iff-c5pX3rp5C9q28foFWSbqfZ6AwHZCA',
@@ -69,6 +69,36 @@ export default function App() {
 
   const isSpinningRef = useRef(isSpinning);
   isSpinningRef.current = isSpinning;
+
+  // Función helper para comparar URLs de Google Sheets de manera flexible
+  const matchJornadaByUrl = (targetUrl: string, currentActiveId?: string) => {
+    // 1. Intento por coincidencia directa de URL
+    let matched = JORNADAS.find((j) => j.url === targetUrl);
+    if (matched) return matched.id;
+
+    // 2. Extraer parámetros clave (spreadsheetId y gid) para comparar sin importar variaciones de texto
+    const extractKeys = (urlStr: string) => {
+      const idMatch = urlStr.match(/\/d\/([a-zA-Z0-9-_]+)/);
+      const gidMatch = urlStr.match(/gid=([0-9]+)/);
+      return {
+        id: idMatch ? idMatch[1] : null,
+        gid: gidMatch ? gidMatch[1] : null,
+      };
+    };
+
+    const targetKeys = extractKeys(targetUrl);
+    if (targetKeys.id) {
+      matched = JORNADAS.find((j) => {
+        const jKeys = extractKeys(j.url);
+        // Si la hoja comparte el mismo ID y el mismo GID (o no especifica GID)
+        return jKeys.id === targetKeys.id && (!targetKeys.gid || jKeys.gid === targetKeys.gid);
+      });
+      if (matched) return matched.id;
+    }
+
+    // 3. Si no hay coincidencia directa, conserva el ID activo actual o usa 'jueves-tarde'
+    return currentActiveId || 'jueves-tarde';
+  };
 
   const fetchSheetData = useCallback(
     async (overrideUrl?: string, overrideColumn?: string, overrideJornadaId?: string) => {
@@ -122,20 +152,25 @@ export default function App() {
 
         setParticipants(newParticipants.filter((p) => !removedParticipantIds.has(p.id)));
 
-        const matchedJornada = JORNADAS.find((j) => j.url === targetUrl);
+        // Determina el ID de la jornada de forma segura
+        setSheetConfig((prev) => {
+          const resolvedJornadaId = overrideJornadaId !== undefined
+            ? overrideJornadaId
+            : matchJornadaByUrl(targetUrl, prev.activeJornadaId);
 
-        setSheetConfig((prev) => ({
-          ...prev,
-          url: targetUrl,
-          spreadsheetId: data.spreadsheetId,
-          gid: data.gid,
-          availableColumns: data.headers || [],
-          selectedColumn: data.selectedColumn || '',
-          activeJornadaId: overrideJornadaId !== undefined ? overrideJornadaId : (matchedJornada ? matchedJornada.id : prev.activeJornadaId),
-          status: 'success',
-          lastSyncedAt: new Date().toISOString(),
-          error: null,
-        }));
+          return {
+            ...prev,
+            url: targetUrl,
+            spreadsheetId: data.spreadsheetId,
+            gid: data.gid,
+            availableColumns: data.headers || [],
+            selectedColumn: data.selectedColumn || '',
+            activeJornadaId: resolvedJornadaId,
+            status: 'success',
+            lastSyncedAt: new Date().toISOString(),
+            error: null,
+          };
+        });
       } catch (err: any) {
         console.error('Fetch Sheet Error:', err);
         setSheetConfig((prev) => ({
@@ -327,7 +362,7 @@ export default function App() {
           <button
             onClick={() => fetchSheetData()}
             disabled={sheetConfig.status === 'loading'}
-            className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold py-2 px-3 rounded-xl border border-slate-700 transition-all cursor-pointer shadow-sm"
+            className="flex items-center gap-1.5 bg-slate-800 hover:bg-[#005028] text-slate-200 text-xs font-semibold py-2 px-3 rounded-xl border border-slate-700 transition-all cursor-pointer shadow-sm"
             title="Sincronizar ahora"
           >
             <RefreshCw
