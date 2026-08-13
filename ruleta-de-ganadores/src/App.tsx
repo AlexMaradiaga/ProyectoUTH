@@ -55,7 +55,7 @@ export default function App() {
     autoSync: true,
     syncIntervalSeconds: 10,
     status: 'idle',
-    activeJornadaId: 'jueves-manana',
+    activeJornadaId: 'jueves-tarde',
   });
 
   const [wheelSettings, setWheelSettings] = useState<WheelSettings>({
