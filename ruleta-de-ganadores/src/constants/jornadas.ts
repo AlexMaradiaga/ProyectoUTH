@@ -12,7 +12,7 @@ export const JORNADAS: Jornada[] = [
     name: 'Jueves Mañana',
     day: 'Jueves',
     session: 'Mañana',
-    url: 'https://docs.google.com/spreadsheets/d/1WSXedfn2b_72gbW5jpkq4gnf3neIqVnvL1GXBB_2Ops/edit?usp=sharing',
+    url: 'https://docs.google.com/spreadsheets/d/1WSXedfn2b_72gbW5jpkq4gnf3neIqVnvL1GXBB_2Ops/edit?gid=1649911515#gid=1649911515',
   },
   {
     id: 'jueves-tarde',

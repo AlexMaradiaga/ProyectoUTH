@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 
 const DEFAULT_SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1RFexMwM6S2iff-c5pX3rp5C9q28foFWSbqfZ6AwHZCA/edit?gid=1376844313#gid=1376844313';
+  'https://docs.google.com/spreadsheets/d/1WSXedfn2b_72gbW5jpkq4gnf3neIqVnvL1GXBB_2Ops/edit?gid=1649911515#gid=1649911515';
 
 // Sample fallback participants if Google Sheet is completely empty or during offline testing
 const FALLBACK_SAMPLE_NAMES = [
@@ -48,13 +48,14 @@ export default function App() {
 
   const [sheetConfig, setSheetConfig] = useState<SheetConfig>({
     url: DEFAULT_SHEET_URL,
-    spreadsheetId: '1RFexMwM6S2iff-c5pX3rp5C9q28foFWSbqfZ6AwHZCA',
-    gid: '1376844313',
+    spreadsheetId: '1WSXedfn2b_72gbW5jpkq4gnf3neIqVnvL1GXBB_2Ops',
+    gid: '1649911515',
     selectedColumn: '',
     availableColumns: [],
     autoSync: true,
     syncIntervalSeconds: 10,
     status: 'idle',
+    activeJornadaId: 'jueves-manana',
   });
 
   const [wheelSettings, setWheelSettings] = useState<WheelSettings>({
