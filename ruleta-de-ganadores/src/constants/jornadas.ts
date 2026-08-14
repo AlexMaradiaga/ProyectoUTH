@@ -8,20 +8,6 @@ export interface Jornada {
 
 export const JORNADAS: Jornada[] = [
   {
-    id: 'jueves-manana',
-    name: 'Jueves Mañana',
-    day: 'Jueves',
-    session: 'Mañana',
-    url: 'https://docs.google.com/spreadsheets/d/1WSXedfn2b_72gbW5jpkq4gnf3neIqVnvL1GXBB_2Ops/edit?gid=1649911515#gid=1649911515',
-  },
-  {
-    id: 'jueves-tarde',
-    name: 'Jueves Tarde',
-    day: 'Jueves',
-    session: 'Tarde',
-    url: 'https://docs.google.com/spreadsheets/d/1RFexMwM6S2iff-c5pX3rp5C9q28foFWSbqfZ6AwHZCA/edit?gid=1376844313#gid=1376844313',
-  },
-  {
     id: 'viernes-manana',
     name: 'Viernes Mañana',
     day: 'Viernes',

@@ -20,9 +20,9 @@ import {
   FileSpreadsheet
 } from 'lucide-react';
 
-// URL por defecto configurada para JUEVES TARDE
+// URL por defecto configurada para VIERNES MAÑANA
 const DEFAULT_SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1RFexMwM6S2iff-c5pX3rp5C9q28foFWSbqfZ6AwHZCA/edit?gid=1376844313#gid=1376844313';
+  'https://docs.google.com/spreadsheets/d/1cQ63tsF58Dn76dS9_NSsmuUBqekCScWEATG3WDvS0qw/edit?gid=705517632#gid=705517632';
 
 const FALLBACK_SAMPLE_NAMES = [
   'Carlos Mendoza',
@@ -45,17 +45,17 @@ export default function App() {
 
   const [removedParticipantIds, setRemovedParticipantIds] = useState<Set<string>>(new Set());
 
-  // Estado inicial sincronizado exactamente con JUEVES TARDE
+  // Estado inicial sincronizado exactamente con VIERNES MAÑANA
   const [sheetConfig, setSheetConfig] = useState<SheetConfig>({
     url: DEFAULT_SHEET_URL,
-    spreadsheetId: '1RFexMwM6S2iff-c5pX3rp5C9q28foFWSbqfZ6AwHZCA',
-    gid: '1376844313',
+    spreadsheetId: '1cQ63tsF58Dn76dS9_NSsmuUBqekCScWEATG3WDvS0qw',
+    gid: '705517632',
     selectedColumn: '',
     availableColumns: [],
     autoSync: true,
     syncIntervalSeconds: 10,
     status: 'idle',
-    activeJornadaId: 'jueves-tarde',
+    activeJornadaId: 'viernes-manana',
   });
 
   const [wheelSettings, setWheelSettings] = useState<WheelSettings>({
@@ -96,8 +96,8 @@ export default function App() {
       if (matched) return matched.id;
     }
 
-    // 3. Si no hay coincidencia directa, conserva el ID activo actual o usa 'jueves-tarde'
-    return currentActiveId || 'jueves-tarde';
+    // 3. Si no hay coincidencia directa, conserva el ID activo actual o usa 'viernes-manana'
+    return currentActiveId || 'viernes-manana';
   };
 
   const fetchSheetData = useCallback(
