@@ -20,20 +20,9 @@ import {
   FileSpreadsheet
 } from 'lucide-react';
 
-// URL por defecto configurada para VIERNES MAÑANA
+// URL configurada por defecto para la jornada "Celebración Docente UTH"
 const DEFAULT_SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1cQ63tsF58Dn76dS9_NSsmuUBqekCScWEATG3WDvS0qw/edit?gid=705517632#gid=705517632';
-
-const FALLBACK_SAMPLE_NAMES = [
-  'Carlos Mendoza',
-  'Ana Sofía Reyes',
-  'María Fernanda López',
-  'David Alejandro Gómez',
-  'Valeria Torres',
-  'Gabriel Morales',
-  'Isabella Ruiz',
-  'Mateo Hernández',
-];
+  'https://docs.google.com/spreadsheets/d/1Sv2RtmMTPwbJwB_j29lA04N2Kt4z_kbqkhTF6NIzRxU/edit?usp=sharing';
 
 export default function App() {
   const [participants, setParticipants] = useState<Participant[]>([]);
@@ -45,17 +34,17 @@ export default function App() {
 
   const [removedParticipantIds, setRemovedParticipantIds] = useState<Set<string>>(new Set());
 
-  // Estado inicial sincronizado exactamente con VIERNES MAÑANA
+  // Estado inicial sincronizado con Celebración Docente UTH
   const [sheetConfig, setSheetConfig] = useState<SheetConfig>({
     url: DEFAULT_SHEET_URL,
-    spreadsheetId: '1cQ63tsF58Dn76dS9_NSsmuUBqekCScWEATG3WDvS0qw',
-    gid: '705517632',
-    selectedColumn: '',
+    spreadsheetId: '1Sv2RtmMTPwbJwB_j29lA04N2Kt4z_kbqkhTF6NIzRxU',
+    gid: '0',
+    selectedColumn: 'Nombre completo',
     availableColumns: [],
     autoSync: true,
     syncIntervalSeconds: 10,
     status: 'idle',
-    activeJornadaId: 'viernes-manana',
+    activeJornadaId: 'Celebración Docente UTH',
   });
 
   const [wheelSettings, setWheelSettings] = useState<WheelSettings>({
@@ -72,11 +61,9 @@ export default function App() {
 
   // Función helper para comparar URLs de Google Sheets de manera flexible
   const matchJornadaByUrl = (targetUrl: string, currentActiveId?: string) => {
-    // 1. Intento por coincidencia directa de URL
     let matched = JORNADAS.find((j) => j.url === targetUrl);
     if (matched) return matched.id;
 
-    // 2. Extraer parámetros clave (spreadsheetId y gid) para comparar sin importar variaciones de texto
     const extractKeys = (urlStr: string) => {
       const idMatch = urlStr.match(/\/d\/([a-zA-Z0-9-_]+)/);
       const gidMatch = urlStr.match(/gid=([0-9]+)/);
@@ -90,20 +77,18 @@ export default function App() {
     if (targetKeys.id) {
       matched = JORNADAS.find((j) => {
         const jKeys = extractKeys(j.url);
-        // Si la hoja comparte el mismo ID y el mismo GID (o no especifica GID)
-        return jKeys.id === targetKeys.id && (!targetKeys.gid || jKeys.gid === targetKeys.gid);
+        return jKeys.id === targetKeys.id;
       });
       if (matched) return matched.id;
     }
 
-    // 3. Si no hay coincidencia directa, conserva el ID activo actual o usa 'viernes-manana'
-    return currentActiveId || 'viernes-manana';
+    return currentActiveId || 'Celebración Docente UTH';
   };
 
   const fetchSheetData = useCallback(
     async (overrideUrl?: string, overrideColumn?: string, overrideJornadaId?: string) => {
       const targetUrl = overrideUrl || sheetConfig.url;
-      const targetCol = overrideColumn !== undefined ? overrideColumn : sheetConfig.selectedColumn;
+      const targetCol = overrideColumn !== undefined ? overrideColumn : sheetConfig.selectedColumn || 'Nombre completo';
 
       setSheetConfig((prev) => ({ ...prev, status: 'loading', error: null }));
 
@@ -127,36 +112,23 @@ export default function App() {
 
         const newParticipants: Participant[] = rawParticipants.map((nameStr, idx) => {
           const rowObj = rows[idx] || {};
-          const email =
-            rowObj['Correo electrónico'] ||
-            rowObj['Dirección de correo electrónico font-medium'] ||
-            rowObj['Email'] ||
-            rowObj['Email Address'] ||
-            '';
-          const phone =
-            rowObj['Número de WhatsApp / Teléfono'] ||
-            rowObj['Teléfono'] ||
-            rowObj['WhatsApp'] ||
-            rowObj['Phone'] ||
-            '';
+          const carrera = rowObj['Carrera a la que pertenece'] || '';
 
           return {
             id: `sheet-${idx}-${nameStr.toLowerCase().replace(/\s+/g, '-')}`,
             name: nameStr,
-            email,
-            phone,
-            extraInfo: rowObj,
+            extraInfo: carrera ? { 'Carrera a la que pertenece': carrera } : {},
             sourceRow: idx + 2,
           };
         });
 
         setParticipants(newParticipants.filter((p) => !removedParticipantIds.has(p.id)));
 
-        // Determina el ID de la jornada de forma segura
         setSheetConfig((prev) => {
-          const resolvedJornadaId = overrideJornadaId !== undefined
-            ? overrideJornadaId
-            : matchJornadaByUrl(targetUrl, prev.activeJornadaId);
+          const resolvedJornadaId =
+            overrideJornadaId !== undefined
+              ? overrideJornadaId
+              : matchJornadaByUrl(targetUrl, prev.activeJornadaId);
 
           return {
             ...prev,
@@ -164,7 +136,7 @@ export default function App() {
             spreadsheetId: data.spreadsheetId,
             gid: data.gid,
             availableColumns: data.headers || [],
-            selectedColumn: data.selectedColumn || '',
+            selectedColumn: data.selectedColumn || 'Nombre completo',
             activeJornadaId: resolvedJornadaId,
             status: 'success',
             lastSyncedAt: new Date().toISOString(),
